@@ -4,8 +4,7 @@ import chorus.schema.Database
 import chorus.sql.relational_algebra.{RelUtils, Relation}
 import chorus.sql.{AbstractAnalysis, QueryParser, TreePrinter}
 import org.apache.calcite.plan.{Convention, RelOptAbstractTable}
-import org.apache.calcite.rel.core._
-import org.apache.calcite.rel.rules.ProjectMergeRule
+import org.apache.calcite.rel.rules.{CoreRules, ProjectMergeRule}
 
 /** Root class for rewriters.
   *
@@ -77,7 +76,7 @@ object Rewriter {
     }
 
     val withPrefix = if (withClauses.isEmpty) "" else withClauses.mkString("WITH ", ", ", "\n")
-    val querySql = RelUtils.relToSql(root.optimize(ProjectMergeRule.INSTANCE), dialect)
+    val querySql = RelUtils.relToSql(root.optimize(CoreRules.PROJECT_MERGE), dialect)
     withPrefix + querySql
   }
 }

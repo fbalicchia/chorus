@@ -4,15 +4,15 @@ import chorus.analysis.histogram.{HistogramAnalysis, QueryType}
 import chorus.dataflow.AggFunctions.{AVG, COUNT, SUM}
 import chorus.dataflow.domain.UnitDomain
 import chorus.exception.UnsupportedQueryException
-import chorus.rewriting.rules.ColumnDefinition.{rel, _}
-import chorus.rewriting.rules.Expr.{Sum, col, _}
-import chorus.rewriting.rules.Operations._
-import chorus.rewriting.rules._
+import chorus.rewriting.rules.ColumnDefinition.{rel, *}
+import chorus.rewriting.rules.Expr.{Sum, col, *}
+import chorus.rewriting.rules.Operations.*
+import chorus.rewriting.rules.*
 import chorus.rewriting.{DPRewriterConfig, DPUtil, Rewriter}
 import chorus.schema.{Database, Schema}
 import chorus.sql.relational_algebra.Relation
-import org.apache.calcite.rel.core._
-import org.apache.calcite.rel.rules.FilterProjectTransposeRule
+import org.apache.calcite.rel.core.*
+import org.apache.calcite.rel.rules.{CoreRules, FilterProjectTransposeRule}
 
 class SampleAndAggregateRewriter(config: SampleAndAggregateConfig) extends Rewriter(config) {
   def rewrite(root: Relation): Relation = {
@@ -79,7 +79,7 @@ class SampleAndAggregateRewriter(config: SampleAndAggregateConfig) extends Rewri
 
         case _ => (node, ())
       }
-    }.optimize(FilterProjectTransposeRule.INSTANCE)  // push filters down to grouping expression relation, if possible, to improve query performance
+    }.optimize(CoreRules.FILTER_PROJECT_TRANSPOSE)  // push filters down to grouping expression relation, if possible, to improve query performance
       .asAlias("_partitioned_query")
 
     /** Step 2: Using the exponential mechanism, calculate differentially private quartiles (1/4 and 3/4) of partitioned

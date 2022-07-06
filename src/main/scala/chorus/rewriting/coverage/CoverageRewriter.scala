@@ -1,12 +1,12 @@
 package chorus.rewriting.coverage
 
-import chorus.rewriting.rules.ColumnDefinition._
-import chorus.rewriting.rules.Expr._
-import chorus.rewriting.rules.Operations._
+import chorus.rewriting.rules.ColumnDefinition.*
+import chorus.rewriting.rules.Expr.*
+import chorus.rewriting.rules.Operations.*
 import chorus.rewriting.{Rewriter, RewriterConfig}
 import chorus.sql.relational_algebra.{RelUtils, Relation}
 import org.apache.calcite.rel.logical.{LogicalAggregate, LogicalSort}
-import org.apache.calcite.rel.rules.FilterProjectTransposeRule
+import org.apache.calcite.rel.rules.{CoreRules, FilterProjectTransposeRule}
 
 /**
   * Rewriter that calculates coverage of aggregation queries.
@@ -20,7 +20,7 @@ class CoverageRewriter(config: RewriterConfig) extends Rewriter(config) {
     /** Replace aggregation with a count-histogram, grouping by the same bins of original aggregation. */
     val coverageRelation = Relation(rootAggNode.getInput)
       .agg (groupedColumns: _*) (Count(*) AS "coverage")
-      .optimize(FilterProjectTransposeRule.INSTANCE)
+      .optimize(CoreRules.FILTER_PROJECT_TRANSPOSE)
 
     /** Reconstruct sort node, if present in original query, to preserve ORDER BY and LIMIT clauses. */
     val newRoot = root.unwrap match {

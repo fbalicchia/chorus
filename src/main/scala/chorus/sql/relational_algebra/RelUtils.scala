@@ -28,7 +28,7 @@ import org.apache.calcite.plan.hep.{HepPlanner, HepProgram}
 import org.apache.calcite.rel.RelNode
 import org.apache.calcite.rel.core.{Aggregate, Join, TableScan}
 import org.apache.calcite.rel.rel2sql.RelToSqlConverter
-import org.apache.calcite.rel.rules.FilterJoinRule
+import org.apache.calcite.rel.rules.{CoreRules, FilterJoinRule}
 import org.apache.calcite.rex.{RexCall, RexInputRef, RexNode}
 import org.apache.calcite.sql.SqlDialect.DatabaseProduct
 import org.apache.calcite.sql.SqlKind
@@ -109,7 +109,7 @@ object RelUtils {
     *   SELECT * FROM a JOIN b ON a.x = b.x
     */
   def pushFiltersOnJoins(rel: RelNode): RelNode = {
-    val program = HepProgram.builder.addRuleInstance(FilterJoinRule.FILTER_ON_JOIN).build
+    val program = HepProgram.builder.addRuleInstance(CoreRules.FILTER_INTO_JOIN).build
     val optPlanner = new HepPlanner(program)
     optPlanner.setRoot(rel)
     optPlanner.findBestExp
