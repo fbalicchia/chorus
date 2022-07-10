@@ -38,7 +38,6 @@ import org.apache.calcite.schema.{Schema, SchemaPlus}
 import org.apache.calcite.sql.SqlOperatorTable
 import org.apache.calcite.sql.`type`.SqlTypeFactoryImpl
 import org.apache.calcite.sql.parser.SqlParser
-import org.apache.calcite.sql.parser.impl.SqlParserImpl
 import org.apache.calcite.sql.validate.{SqlConformance, SqlConformanceEnum, SqlValidator, SqlValidatorImpl}
 import org.apache.calcite.sql2rel.{RelDecorrelator, SqlRexConvertletTable, SqlToRelConverter}
 import org.apache.calcite.tools._

@@ -23,11 +23,7 @@
 package chorus.sql
 
 import com.facebook.presto.sql.parser.{SqlParser => PrestoSqlParser}
-import com.facebook.presto.sql.tree.{Query, Statement}
-import chorus.exception.ParsingException
 import chorus.schema.Database
-import chorus.sql.ast.{Transformer => ASTTransformer}
-import chorus.sql.dataflow_graph.Node
 import chorus.sql.relational_algebra.{Relation, Transformer => RelTransformer}
 
 /** Utility class for parsing SQL queries into different representations.
@@ -42,37 +38,6 @@ object QueryParser {
       println("<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     }
   }
-
-  /** Parse a SQL query into an AST (represented by a Presto tree)
-    * @param query The SQL query to be parsed
-    * @return The AST root node representing the query
-    */
-  def parseToPrestoTree(query: String): Query = {
-    printQuery(query, "presto tree")
-
-    try {
-      return prestoParser.createStatement(query).asInstanceOf[Query]
-    }
-    catch {
-      case e: Exception => {
-        // Catch all exceptions that occur during presto parsing and wrap them in our ParsingException exception type.
-        throw new ParsingException(e.getMessage)
-      }
-    }
-  }
-
-  /** Parse a SQL query and transform it into a dataflow graph
-    * @param query The SQL query to be parsed
-    * @return The dataflow graph root node
-    */
-  def parseToDataflowGraph(query: String, database: Database): Node = {
-    printQuery(query, "dataflow graph")
-
-    val prestoRoot: Statement = parseToPrestoTree(query)
-    val transform = new ASTTransformer(database)
-    transform.convertToDataflowGraph(prestoRoot)
-  }
-
   /** Parse a SQL query and transform it into a relational algebra representation.
     * @param query The SQL query to be parsed
     * @return The relational algebra tree root node

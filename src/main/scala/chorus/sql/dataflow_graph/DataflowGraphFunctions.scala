@@ -28,6 +28,5 @@ import chorus.sql.{AbstractAnalysis, QueryParser, TreeFunctions, TreePrinter}
 trait DataflowGraphFunctions extends TreeFunctions[Node] {
   this: AbstractAnalysis[Node, _] =>
   override def getNodeChildren(node: Node): Iterable[Node] = node.children
-  override def parseQueryToTree(query: String, database: Database): Node = QueryParser.parseToDataflowGraph(query, database)
   override def printTree(node: Node) = TreePrinter.printTree(node, resultMap, currentNode)
 }

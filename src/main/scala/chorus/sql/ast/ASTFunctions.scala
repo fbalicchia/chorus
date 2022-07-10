@@ -30,7 +30,7 @@ import chorus.sql.{AbstractAnalysis, QueryParser, TreeFunctions, TreePrinter}
 trait ASTFunctions extends TreeFunctions[Node] {
   this: AbstractAnalysis[Node, _] =>
   override def getNodeChildren(node: Node): Iterable[Node] = ASTFunctions.getChildren(node)
-  override def parseQueryToTree(query: String, database: Database): Node = QueryParser.parseToPrestoTree(query)
+  //override def parseQueryToTree(query: String, database: Database): Node = QueryParser.parseToPrestoTree(query)
   override def printTree(node: Node) = TreePrinter.printTreePresto(node, resultMap, currentNode)
 }
 
