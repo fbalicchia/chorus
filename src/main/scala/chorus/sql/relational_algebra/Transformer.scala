@@ -136,6 +136,7 @@ class Transformer(val config: FrameworkConfig,
     new SqlToRelConverter(new ViewExpanderImpl, validator, createCatalogReader, cluster, convertletTable, sqlToRelConfig)
 
   def convertToRelTree(sql: String): RelNode = {
+    // Calcite factory
     val parser = SqlParser.create(sql, parserConfig)
     val sqlNode = parser.parseQuery
 
@@ -154,6 +155,7 @@ class Transformer(val config: FrameworkConfig,
                             queryString: String,
                             schemaPath: util.List[String],
                             viewPath: util.List[String]): RelRoot = {
+      // calcite factory
       val parser = SqlParser.create(queryString, parserConfig)
       val sqlNode = parser.parseQuery
 
